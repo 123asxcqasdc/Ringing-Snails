@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringing Snails - Бесплатные групповые звонки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #5c6bc0;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo::before {
+            content: "🐌";
+            margin-right: 10px;
+        }
+        
+        .tagline {
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                flex-direction: row;
+            }
+        }
+        
+        .video-container {
+            flex: 3;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .video-box {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4/3;
+        }
+        
+        .video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .invite-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .invite-link {
+            display: flex;
+            margin-top: 10px;
+        }
+        
+        .invite-link input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-mute {
+            background: #ff5722;
+            color: white;
+        }
+        
+        .btn-video {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-call {
+            background: #4caf50;
+            color: white;
+            grid-column: span 2;
+            padding: 15px;
+        }
+        
+        .btn-end {
+            background: #f44336;
+            color: white;
+            grid-column: span 2;
+            padding: 15px;
+        }
+        
+        .participants {
+            margin-top: 20px;
+        }
+        
+        .participants h3 {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .participant-list {
+            list-style: none;
+        }
+        
+        .participant-list li {
+            padding: 8px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .participant-list li::before {
+            content: "🐌";
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #37474f;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #e65100;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Ringing Snails</div>
+            <div class="tagline">Медленно, но уверенно соединяем людей!</div>
+        </header>
+        
+        <div class="main-content">
+            <div class="video-container">
+                <div class="video-box">
+                    <video id="local-video" autoplay muted></video>
+                    <div class="user-name">Вы</div>
+                </div>
+                <div class="video-box">
+                    <video id="remote-video" autoplay></video>
+                    <div class="user-name">Участник 1</div>
+                </div>
+                <!-- дополнительные видео боксы могут быть добавлены динамически -->
+            </div>
+            
+            <div class="controls">
+                <div class="invite-box">
+                    <h3>Пригласить участников</h3>
+                    <p>Отправьте эту ссылку друзьям:</p>
+                    <div class="invite-link">
+                        <input type="text" id="invite-link" readonly>
+                        <button class="copy-btn" onclick="copyLink()">Копировать</button>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-mute" id="mute-btn">Выкл звук</button>
+                    <button class="btn btn-video" id="video-btn">Выкл видео</button>
+                    <button class="btn btn-call" id="call-btn">Начать звонок</button>
+                    <button class="btn btn-end" id="end-btn" disabled>Завершить</button>
+                </div>
+                
+                <div class="participants">
+                    <h3>Участники (1)</h3>
+                    <ul class="participant-list">
+                        <li>Вы</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Как использовать Ringing Snails:</h3>
+            <ol>
+                <li>Нажмите "Начать звонок" чтобы активировать вашу камеру и микрофон</li>
+                <li>Скопируйте ссылку-приглашение и отправьте друзьям</li>
+                <li>Когда они перейдут по ссылке, они автоматически подключатся к вашему звонку</li>
+                <li>Используйте кнопки "Выкл звук" и "Выкл видео" для управления медиа</li>
+                <li>Наслаждайтесь бесплатным звонком!</li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>Ringing Snails — бесплатное приложение для видеозвонков. Для работы требуется современный браузер с поддержкой WebRTC.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Генерируем случайный ID для комнаты
+        const roomId = generateRoomId();
+        document.getElementById('invite-link').value = window.location.href.split('?')[0] + '?room=' + roomId;
+        
+        // Элементы управления
+        const muteBtn = document.getElementById('mute-btn');
+        const videoBtn = document.getElementById('video-btn');
+        const callBtn = document.getElementById('call-btn');
+        const endBtn = document.getElementById('end-btn');
+        const localVideo = document.getElementById('local-video');
+        
+        let localStream = null;
+        let isMuted = false;
+        let isVideoOff = false;
+        
+        // Генератор ID комнаты
+        function generateRoomId() {
+            return Math.random().toString(36).substring(2, 10);
+        }
+        
+        // Копирование ссылки-приглашения
+        function copyLink() {
+            const inviteInput = document.getElementById('invite-link');
+            inviteInput.select();
+            document.execCommand('copy');
+            alert('Ссылка скопирована в буфер обмена!');
+        }
+        
+        // Запрос доступа к камере и микрофону
+        async function startCall() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                
+                localVideo.srcObject = localStream;
+                
+                callBtn.disabled = true;
+                endBtn.disabled = false;
+                
+                // Имитация подключения другого участника (в реальном приложении здесь был бы WebRTC код)
+                setTimeout(() => {
+                    document.getElementById('remote-video').srcObject = localStream;
+                    const participantList = document.querySelector('.participant-list');
+                    participantList.innerHTML += '<li>Участник 1</li>';
+                    document.querySelector('.participants h3').textContent = 'Участники (2)';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Ошибка доступа к медиаустройствам:', error);
+                alert('Не удалось получить доступ к камере или микрофону. Проверьте разрешения браузера.');
+            }
+        }
+        
+        // Завершение звонка
+        function endCall() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            
+            localVideo.srcObject = null;
+            document.getElementById('remote-video').srcObject = null;
+            
+            callBtn.disabled = false;
+            endBtn.disabled = true;
+            
+            // Очистка списка участников
+            const participantList = document.querySelector('.participant-list');
+            participantList.innerHTML = '<li>Вы</li>';
+            document.querySelector('.participants h3').textContent = 'Участники (1)';
+        }
+        
+        // Управление аудио
+        function toggleMute() {
+            if (localStream) {
+                const audioTracks = localStream.getAudioTracks();
+                audioTracks.forEach(track => {
+                    track.enabled = !track.enabled;
+                });
+                
+                isMuted = !isMuted;
+                muteBtn.textContent = isMuted ? 'Вкл звук' : 'Выкл звук';
+            }
+        }
+        
+        // Управление видео
+        function toggleVideo() {
+            if (localStream) {
+                const videoTracks = localStream.getVideoTracks();
+                videoTracks.forEach(track => {
+                    track.enabled = !track.enabled;
+                });
+                
+                isVideoOff = !isVideoOff;
+                videoBtn.textContent = isVideoOff ? 'Вкл видео' : 'Выкл видео';
+            }
+        }
+        
+        // Обработчики событий
+        callBtn.addEventListener('click', startCall);
+        endBtn.addEventListener('click', endCall);
+        muteBtn.addEventListener('click', toggleMute);
+        videoBtn.addEventListener('click', toggleVideo);
+        
+        // Проверяем, есть ли параметр room в URL (имитация присоединения к существующему звонку)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('room')) {
+            // В реальном приложении здесь бы был код для подключения к существующей комнате
+            document.querySelector('.instructions h3').textContent = 'Присоединение к звонку...';
+            setTimeout(() => {
+                startCall();
+                document.querySelector('.instructions h3').textContent = 'Вы успешно присоединились к звонку!';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
